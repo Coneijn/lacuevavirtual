@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Reemplaza esto con el dominio donde desplegarás tu proyecto en Vercel (ej: https://la-cueva-virtual.vercel.app)
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app/";
+// Reemplaza esto con tu URL real cuando despliegues (ej: "https://mi-proyecto.vercel.app")
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tu-proyecto.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -24,15 +24,6 @@ export const metadata: Metadata = {
   },
   description:
     "Un ensayo interactivo sobre la evolución de la curiosidad humana, la topología del pensamiento y la co-evolución con la IA.",
-  keywords: [
-    "Inteligencia Artificial",
-    "Filosofía",
-    "Neurociencia",
-    "Topología del Pensamiento",
-    "Ensayo Interactivo",
-    "Simbiosis Humano IA",
-  ],
-  authors: [{ name: "La Cueva Virtual" }],
   openGraph: {
     title: "La Cueva Virtual — De la Sabana a la Inteligencia Artificial",
     description:
@@ -41,12 +32,23 @@ export const metadata: Metadata = {
     siteName: "La Cueva Virtual",
     locale: "es_MX",
     type: "website",
+    // Configuración explícita que exige el scraper de WhatsApp:
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "La Cueva Virtual - De la Sabana a la Inteligencia Artificial",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "La Cueva Virtual — De la Sabana a la Inteligencia Artificial",
     description:
       "Un ensayo interactivo sobre la evolución de la curiosidad humana y la IA.",
+    images: ["/opengraph-image.png"],
   },
   icons: {
     icon: "/icon.png",
