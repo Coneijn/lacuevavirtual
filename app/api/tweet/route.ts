@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { TwitterApi } from "twitter-api-v2";
 
-// Banco de 30 citas distribuidas a lo largo de toda la obra
 const POSTS_DATABASE = [
   // VOLUMEN I: EL ALGORITMO SOCIAL
   {
@@ -161,46 +160,87 @@ const POSTS_DATABASE = [
 ];
 
 export async function GET(request: Request) {
-  // Verificación de seguridad opcional para Vercel Cron
-  const authHeader = request.headers.get("authorization");
-  if (
-    process.env.CRON_SECRET &&
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  const { searchParams } = new URL(request.url);
+  const isDryRun = searchParams.get("dryRun") === "true";
+
+  // 1. Diagnóstico de variables de entorno presentadas en Vercel
+  const envCheck = {
+    hasApiKey: !!process.env.TWITTER_API_KEY,
+    hasApiSecret: !!process.env.TWITTER_API_SECRET,
+    hasAccessToken: !!process.env.TWITTER_ACCESS_TOKEN,
+    hasAccessSecret: !!process.env.TWITTER_ACCESS_SECRET,
+    apiKeyPrefix: process.env.TWITTER_API_KEY ? `${process.env.TWITTER_API_KEY.substring(0, 4)}...` : "FALTA",
+    accessTokenPrefix: process.env.TWITTER_ACCESS_TOKEN ? `${process.env.TWITTER_ACCESS_TOKEN.substring(0, 4)}...` : "FALTA",
+  };
+
+  // Si falta alguna clave de entorno, retornamos error temprano con el reporte
+  if (!envCheck.hasApiKey || !envCheck.hasApiSecret || !envCheck.hasAccessToken || !envCheck.hasAccessSecret) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Faltan variables de entorno en Vercel",
+        debug: envCheck,
+      },
+      { status: 500 }
+    );
   }
 
-  // 1. Instanciamos el cliente adentro de GET para que lea las variables solo en tiempo de ejecución
-  const client = new TwitterApi({
-    appKey: process.env.TWITTER_API_KEY || "",
-    appSecret: process.env.TWITTER_API_SECRET || "",
-    accessToken: process.env.TWITTER_ACCESS_TOKEN || "",
-    accessSecret: process.env.TWITTER_ACCESS_SECRET || "",
-  });
+  // 2. Preparar el contenido del tuit
+  const randomIndex = Math.floor(Math.random() * POSTS_DATABASE.length);
+  const post = POSTS_DATABASE[randomIndex];
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app";
+  const cleanBaseUrl = baseUrl.replace(/\/$/, "");
+  const chapterUrl = `${cleanBaseUrl}/capitulo/${post.chapter}`;
+  const tweetText = `«${post.quote}»\n\n📖 Lee "${post.title}" en La Cueva Virtual:\n${chapterUrl}`;
+
+  // 3. Modo prueba en seco (?dryRun=true) para probar sin gastar peticiones a Twitter
+  if (isDryRun) {
+    return NextResponse.json({
+      success: true,
+      mode: "DRY_RUN (No se envió a X)",
+      tweetText,
+      characterCount: tweetText.length,
+      envCheck,
+    });
+  }
+
+  // 4. Intento de publicación en X con captura exhaustiva de errores
   try {
-    const randomIndex = Math.floor(Math.random() * POSTS_DATABASE.length);
-    const post = POSTS_DATABASE[randomIndex];
+    const client = new TwitterApi({
+      appKey: process.env.TWITTER_API_KEY!,
+      appSecret: process.env.TWITTER_API_SECRET!,
+      accessToken: process.env.TWITTER_ACCESS_TOKEN!,
+      accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+    });
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app";
-    const cleanBaseUrl = baseUrl.replace(/\/$/, "");
-    const chapterUrl = `${cleanBaseUrl}/capitulo/${post.chapter}`;
-
-    const tweetText = `«${post.quote}»\n\n📖 Lee "${post.title}" en La Cueva Virtual:\n${chapterUrl}`;
-
-    // Publicar en X
     const { data } = await client.v2.tweet(tweetText);
 
     return NextResponse.json({
       success: true,
       tweetId: data.id,
       tweetText,
+      envCheck,
     });
   } catch (error: any) {
-    console.error("Error al publicar en X:", error);
+    // Extracción profunda del error que devuelve la API de Twitter
+    const errorDetails = {
+      message: error.message || "Error desconocido",
+      httpCode: error.code || error.status || "Sin código HTTP",
+      twitterApiErrorData: error.data || "Sin payload detallado",
+      rateLimitInfo: error.rateLimit || "Sin datos de límite de tasa",
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    };
+
+    console.error("[X_BOT_DEBUG_ERROR]:", JSON.stringify(errorDetails, null, 2));
+
     return NextResponse.json(
-      { success: false, error: error.message || "Error desconocido" },
+      {
+        success: false,
+        errorSummary: "Falló la publicación en la API de Twitter/X",
+        debug: errorDetails,
+        envCheck,
+      },
       { status: 500 }
     );
   }
