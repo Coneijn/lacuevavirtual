@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app/";
+// Removemos la diagonal al final si existe para evitar dobles diagonales
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app";
+const siteUrl = rawSiteUrl.replace(/\/$/, "");
 
-// Secuencia exacta de los slugs de tus capítulos
 const READING_SEQUENCE = [
   "01-vecina",
   "02-el-algoritmo-social-primitivo",
@@ -19,19 +20,17 @@ const READING_SEQUENCE = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 1. Página principal (Índice)
   const routes: MetadataRoute.Sitemap = [
     {
-      url: siteUrl,
+      url: siteUrl, // https://lacuevavirtual.vercel.app
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1.0,
     },
   ];
 
-  // 2. Rutas dinámicas para cada capítulo
   const chapterRoutes: MetadataRoute.Sitemap = READING_SEQUENCE.map((slug) => ({
-    url: `${siteUrl}/capitulo/${slug}`,
+    url: `${siteUrl}/capitulo/${slug}`, // Ahora generará una sola diagonal: https://lacuevavirtual.vercel.app/capitulo/slug
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.8,
