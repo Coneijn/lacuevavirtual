@@ -1,12 +1,5 @@
-import { NextResponse } from "next";
+import { NextResponse } from "next/server";
 import { TwitterApi } from "twitter-api-v2";
-
-const client = new TwitterApi({
-  appKey: process.env.TWITTER_API_KEY!,
-  appSecret: process.env.TWITTER_API_SECRET!,
-  accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-  accessSecret: process.env.TWITTER_ACCESS_SECRET!,
-});
 
 // Banco de 30 citas distribuidas a lo largo de toda la obra
 const POSTS_DATABASE = [
@@ -177,8 +170,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
+  // 1. Instanciamos el cliente adentro de GET para que lea las variables solo en tiempo de ejecución
+  const client = new TwitterApi({
+    appKey: process.env.TWITTER_API_KEY || "",
+    appSecret: process.env.TWITTER_API_SECRET || "",
+    accessToken: process.env.TWITTER_ACCESS_TOKEN || "",
+    accessSecret: process.env.TWITTER_ACCESS_SECRET || "",
+  });
+
   try {
-    // Seleccionar una cita al azar de las 30 disponibles
     const randomIndex = Math.floor(Math.random() * POSTS_DATABASE.length);
     const post = POSTS_DATABASE[randomIndex];
 
@@ -187,10 +187,9 @@ export async function GET(request: Request) {
     const cleanBaseUrl = baseUrl.replace(/\/$/, "");
     const chapterUrl = `${cleanBaseUrl}/capitulo/${post.chapter}`;
 
-    // Armar el texto del tuit
     const tweetText = `«${post.quote}»\n\n📖 Lee "${post.title}" en La Cueva Virtual:\n${chapterUrl}`;
 
-    // Publicar en X (v2 API)
+    // Publicar en X
     const { data } = await client.v2.tweet(tweetText);
 
     return NextResponse.json({
