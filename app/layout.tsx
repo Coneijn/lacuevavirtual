@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 // Reemplaza esto con tu URL real cuando despliegues (ej: "https://mi-proyecto.vercel.app")
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tu-proyecto.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app/";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
