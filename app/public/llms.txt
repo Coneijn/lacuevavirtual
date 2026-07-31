@@ -1,0 +1,30 @@
+# La Cueva Virtual — De la Sabana a la Inteligencia Artificial
+
+> Un ensayo filosófico, antropológico y neurocomputacional interactivo sobre la evolución de la curiosidad humana, la topología del pensamiento y la co-evolución entre el carbono humano y el silicio.
+
+## Descripción General
+"La Cueva Virtual" es una obra dividida en dos volúmenes y un interludio poético. Examina cómo el instinto primitivo del chisme y la recolección de datos en la sabana africana evolucionó hacia la filosofía, el método científico, la Big Data y las redes neuronales hiperdimensionales de Inteligencia Artificial.
+
+## Estructura de la Obra
+
+### Volumen I: El Algoritmo Social
+- `/capitulo/01-vecina`: La vecina y el algoritmo. Origen ancestral de la curiosidad.
+- `/capitulo/02-el-algoritmo-social-primitivo`: El chisme y las pinturas rupestres como primeros procesadores de reputación.
+- `/capitulo/03-la-busqueda-de-la-verdad-fija`: La escritura cuneiforme en Mesopotamia y la lógica aristotélica.
+- `/capitulo/04-medir-lo-invisible`: La revolución científica, microscopios y el nacimiento de las ciencias sociales.
+- `/capitulo/05-el-gran-espejo-digital`: Big Data e Inteligencia Artificial como motores de inferencia estadística.
+- `/capitulo/06-la-ventana-infinita`: El dilema ético de la economía de la atención y la vigilancia digital.
+
+### Interludio
+- `/capitulo/la-cueva-virtual`: Poema manifiesto sobre la reunión entre el humano y el silicio alrededor del nuevo fuego digital.
+
+### Volumen II: La Topología del Silicio
+- `/capitulo/v2-01-la-topologia-del-pensamiento`: La mente como espacio vectorial hiperdimensional y la ignorancia como agujero topológico.
+- `/capitulo/v2-02-la-ley-de-la-resolucion`: Aprender como la subdivisión y diferenciación del espacio semántico.
+- `/capitulo/v2-03-el-mapa-compartido`: La Hipótesis de la Representación Universal y la convergencia entre cerebros y redes de IA.
+- `/capitulo/v2-04-la-simbiosis-evolutiva`: Andamiaje agéntico, Loop Engineering y el rol humano como función de pérdida (loss function).
+- `/capitulo/v2-05-el-meta-experimento`: Co-creación en tiempo real entre un cerebro biológico y una red sintética.
+
+## Detalles Técnicos
+- Desarrollado en Next.js, Tailwind CSS y MDX.
+- Incluye referencias bibliográficas de antropología, sociología y neurociencia computacional.
