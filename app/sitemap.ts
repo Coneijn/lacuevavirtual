@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tu-proyecto.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app/";
 
 // Secuencia exacta de los slugs de tus capítulos
 const READING_SEQUENCE = [

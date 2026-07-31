@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lacuevavirtual.vercel.app/";
 
 export const metadata: Metadata = {
+  verification: {
+    google: "gywyN5SODhZFA9qhyqhhO10L2onXfyNWxjVT7uOo75s", // Pega aquí tu código
+  },
   metadataBase: new URL(siteUrl),
   title: {
     default: "La Cueva Virtual — De la Sabana a la Inteligencia Artificial",
@@ -35,7 +38,7 @@ export const metadata: Metadata = {
     // Configuración explícita que exige el scraper de WhatsApp:
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "/opengraph-image.jpg",
         width: 1200,
         height: 630,
         alt: "La Cueva Virtual - De la Sabana a la Inteligencia Artificial",
@@ -48,7 +51,7 @@ export const metadata: Metadata = {
     title: "La Cueva Virtual — De la Sabana a la Inteligencia Artificial",
     description:
       "Un ensayo interactivo sobre la evolución de la curiosidad humana y la IA.",
-    images: ["/opengraph-image.png"],
+    images: ["/opengraph-image.jpg"],
   },
   icons: {
     icon: "/icon.png",
